@@ -6,9 +6,11 @@ import LoginPage from "./pages/LoginPage"
 import Test from "./pages/Test"
 import ProtectedRoute from "./ProtectedRoute"
 import Navbar from "./components/Navbar"
+import DashboardPage from "./pages/admin/Usuario/DashboardPage"
+import UsuarioFormPage from "./pages/admin/Usuario/UsuarioFormPage"
 
 function App(){
-  return (
+  return (  
     <AuthProvider>
       <BrowserRouter>
       <Navbar/>
@@ -17,11 +19,15 @@ function App(){
       <Route path="/login" element={<LoginPage></LoginPage>} />
       <Route path="/register" element={<RegisterPage></RegisterPage>} />
       
+   
+      
       <Route element={<ProtectedRoute></ProtectedRoute>}>
         <Route path="/test" element={<Test></Test>} />
+        <Route path="/dashboard" element={<DashboardPage></DashboardPage>} /> 
+        <Route path="/new-usuario" element={<UsuarioFormPage/>} />
       </Route>
-    
       </Routes>
+      
     </BrowserRouter>
     </AuthProvider>
     
