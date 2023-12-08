@@ -17,30 +17,29 @@ const database_1 = require("../config/database");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { nombre, apellido, email, contrasena, } = req.body;
+    const { nombre, apellido, email, contrasena } = req.body;
     const fecha_registro = req.params.Date;
     const nivel = 1;
     bcrypt_1.default.hash(contrasena, 10, (error, hashcontra) => __awaiter(void 0, void 0, void 0, function* () {
         if (error)
             throw error;
         try {
-            const [rows] = yield database_1.pool.query('INSERT INTO Usuario (nombre, apellido, email, contrasena, nivel, fecha_registro) VALUES (?,?,?,?,?,?)', [nombre, apellido, email, hashcontra, nivel, fecha_registro]);
-            console.log(rows);
-            const [userfound] = yield database_1.pool.query('SELECT * FROM Usuario WHERE email = ?', [email]);
+            yield database_1.pool.query("INSERT INTO Usuario (nombre, apellido, email, contrasena, nivel, fecha_registro) VALUES (?,?,?,?,?,?)", [nombre, apellido, email, hashcontra, nivel, fecha_registro]);
+            const [userfound] = yield database_1.pool.query("SELECT * FROM Usuario WHERE email = ?", [email]);
             const userid = userfound[0].id_user;
             const token = jsonwebtoken_1.default.sign({
                 email: email,
-                user: userid
-            }, 'pepito123');
+                user: userid,
+            }, "pepito123");
             return res.status(200).cookie("token", token).json({
-                msg: 'registrando',
-                rows
+                msg: "registrando",
+                userfound
             });
         }
         catch (error) {
             return res.status(500).json({
-                msg: 'something were wrong',
-                error
+                msg: "something were wrong",
+                error,
             });
         }
     }));
@@ -49,10 +48,10 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.register = register;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, contrasena } = req.body;
-    const [rows] = yield database_1.pool.query('SELECT * FROM Usuario WHERE email = ?', [email]);
+    const [rows] = yield database_1.pool.query("SELECT * FROM Usuario WHERE email = ?", [email]);
     const userid = rows[0].id_user;
     if (!rows) {
-        res.status(400).json({ message: 'email invalido' });
+        res.status(400).json({ message: "email invalido" });
     }
     else {
         const parsword = rows[0].contrasena;
@@ -62,20 +61,23 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             if (resultado) {
                 const token = jsonwebtoken_1.default.sign({
                     email: email,
-                    user: userid
-                }, 'pepito123');
-                res.status(200).cookie("token", token, {
+                    user: userid,
+                }, "pepito123");
+                res
+                    .status(200)
+                    .cookie("token", token, {
                     httpOnly: false,
                     secure: true,
-                    sameSite: 'none'
-                }).json({
+                    sameSite: "none",
+                })
+                    .json({
                     id: userid,
                     email: email,
-                    message: 'Usuario logeado'
+                    message: "Usuario logeado",
                 });
             }
             else {
-                res.status(401).json({ message: 'contraseña no es valida' });
+                res.status(401).json({ message: "contraseña no es valida" });
             }
         });
     }
@@ -83,13 +85,13 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.login = login;
 const logout = (_req, res) => {
     res.cookie("token", "", {
-        expires: new Date(0)
+        expires: new Date(0),
     });
     return res.sendStatus(200);
 };
 exports.logout = logout;
 const profile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const [userfound] = yield database_1.pool.query('SELECT * FROM Usuario WHERE id_user = ?', [req.body]);
+    const [userfound] = yield database_1.pool.query("SELECT * FROM Usuario WHERE id_user = ?", [req.body]);
     return res.json(userfound);
 });
 exports.profile = profile;
@@ -97,13 +99,13 @@ const verifyToken = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const { token } = req.cookies;
     if (!token)
         return res.status(401).json({ message: "Unauthorized" });
-    const payload = jsonwebtoken_1.default.verify(token, 'pepito123');
-    const [userfound] = yield database_1.pool.query('SELECT * FROM Usuario WHERE id_user = ?', [payload.user]);
+    const payload = jsonwebtoken_1.default.verify(token, "pepito123");
+    const [userfound] = yield database_1.pool.query("SELECT * FROM Usuario WHERE id_user = ?", [payload.user]);
     if (!userfound)
         return res.status(401).json({ message: "Unauthorized" });
     return res.json({
         id: userfound[0].id_user,
-        email: userfound[0].email
+        email: userfound[0].email,
     });
 });
 exports.verifyToken = verifyToken;

@@ -14,6 +14,7 @@ import AsistenciaRoutes from './routes/asistencia.routes'
 import AreaRoutes from './routes/area.routes'
 import TrasladoRoutes from './routes/traslado.routes' 
 import authRoutes from './routes/auth.routes' 
+import { PORT } from './config/config'
 
 
 const app = express()
@@ -40,8 +41,8 @@ app.use('/api', TrasladoRoutes)
 
 
 
-const por = 1232
-app.listen(por, () =>  {
-console.log('server listening on port Localhost: ${por}')
-console.log(por)
+
+app.listen(PORT, () =>  {
+console.log(`server listening on port Localhost: ${PORT}`)
+
 }) 

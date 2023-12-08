@@ -22,13 +22,20 @@ const getArea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getArea = getArea;
 const createArea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { area } = req.body;
-    const [rows] = yield database_1.pool.query('INSERT INTO Area (area) VALUES (?)', [area]);
-    console.log(req.body);
-    res.json({
-        msg: 'Area Creada',
-        rows
-    });
+    try {
+        const { area } = req.body;
+        yield database_1.pool.query('INSERT INTO Area (area) VALUES (?)', [area]);
+        const [areafound] = yield database_1.pool.query("SELECT * FROM Area WHERE area = ?", [area]);
+        console.log(req.body);
+        console.log(areafound);
+        res.json({
+            msg: 'Area Creada',
+            areafound: areafound[0].id_area
+        });
+    }
+    catch (error) {
+        res.status(400).json({ msg: 'no se ha podido crear', error: error });
+    }
 });
 exports.createArea = createArea;
 const deleteArea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

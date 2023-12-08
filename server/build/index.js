@@ -16,6 +16,7 @@ const asistencia_routes_1 = __importDefault(require("./routes/asistencia.routes"
 const area_routes_1 = __importDefault(require("./routes/area.routes"));
 const traslado_routes_1 = __importDefault(require("./routes/traslado.routes"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
+const config_1 = require("./config/config");
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
@@ -32,8 +33,6 @@ app.use('/api', asamblea_routes_1.default);
 app.use('/api', asistencia_routes_1.default);
 app.use('/api', area_routes_1.default);
 app.use('/api', traslado_routes_1.default);
-const por = 1232;
-app.listen(por, () => {
-    console.log('server listening on port Localhost: ${por}');
-    console.log(por);
+app.listen(config_1.PORT, () => {
+    console.log(`server listening on port Localhost: ${config_1.PORT}`);
 });

@@ -11,13 +11,13 @@ export interface IPayload {
 export const AuthRequired:RequestHandler = (req, res, next) => {
     try {
         const token = req.cookies['token'];
-        console.log(token);
+       
         if (!token) return res.status(401).json(' no Token, Access Denied');
         
         const payload = jwt.verify(token, 'pepito123') as IPayload;
        
         req.body = payload.user
-        console.log(payload.user)
+       
         return next() 
       
     } catch (e) {
