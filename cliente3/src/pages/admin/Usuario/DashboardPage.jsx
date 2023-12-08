@@ -1,29 +1,35 @@
-import Sidebar from "../../../components/Sidebad"
-import UsuarioFormPage from "./UsuarioFormPage"
 
+import { useUserData } from "../../../hooks/useUser";
+
+import UsuarioFormPage from "./UsuarioFormPage";
+import UsuarioPage from "./UsuarioPage";
+import NavbarAdmin from "../../../components/NavbarAdmin";
+import Sidebad from "../../../components/Sidebad";
+import { Card } from "flowbite-react";
 function DashboardPage() {
+    const { usuarios, setUsuarios, getUsers } = useUserData()
+  
   return (
     <>
-    <div>    
-    <div className="flex ">
-    <div className="basis-[18%] h-[100vh] pr-2" >
-          <Sidebar />
-        </div>
+    <NavbarAdmin/>
    
-    
-    <div className="bg-zinc-700 my-0 flex justify-self-start py-5 px-10 rounded-lg">
-        
-        <UsuarioFormPage/>
-    </div>
+    <div className="flex bg-zinc-950 h-full  w-full">
+      
+        <div className="flex  bg-zinc-950 h-full  w-full">
+          <div className="h-full pr-2">
+            <Sidebad />
+          </div>
 
-        
-
-
-    </div>
-    </div>
-
+          <Card className=" mb-5 flex flex-col align-center py-5 px-10 rounded-lg">
+           
+            <UsuarioFormPage setUsuarios={setUsuarios}/>
+            <UsuarioPage usuarios={usuarios} getUsers={getUsers}/>
+            
+            </Card>
+        </div>
+      </div>
     </>
-  )
+  );
 }
 
-export default DashboardPage
+export default DashboardPage;

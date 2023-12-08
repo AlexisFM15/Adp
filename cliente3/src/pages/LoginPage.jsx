@@ -11,13 +11,14 @@ function LoginPage(){
 
     const OnSubmit = (data)=>{
         signin(data)
-        console.log(data)
     }
     const navigate = useNavigate();
   
     useEffect(() => {
     if (isAuthenticated) {
-      navigate("/Test");
+      navigate("/admin/dashboard")
+      ;
+     
     }
   }     , [isAuthenticated, navigate]);
 
@@ -25,7 +26,7 @@ function LoginPage(){
 
     return (
         <div className="h-[calc(100vh-100px)] flex items-center justify-center">
-           <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md">
+           <div className="bg-logo max-w-md w-full p-10 rounded-md">
 
            <h1 className="text-2xl font-bold">Login</h1>
 
